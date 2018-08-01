@@ -18,10 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.jaredrummler.android.colorpicker.ColorPreference;
+import com.zacharee1.aospsignboard.App;
 import com.zacharee1.aospsignboard.PageEditorActivity;
 import com.zacharee1.aospsignboard.R;
 import com.zacharee1.aospsignboard.widgets.QuickToggles;
-import com.zacharee1.aospsignboard.widgets.qticons.QTIcon;
+import com.zacharee1.aospsignboard.widgets.helpers.QTIcon;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,8 +82,8 @@ public class QuickTogglesConfigure extends AppCompatActivity {
         RecyclerView disabled = findViewById(R.id.avail);
         disabled.setAdapter(disabledAdapter);
 
-        SignBoardManager.getInstance(this)
-                .getList()
+        App.get(this)
+                .getToggleList()
                 .stream()
                 .map(k -> QTIcon.getInstance(this, k))
                 .forEach(enabledAdapter::addItem);
@@ -228,7 +229,7 @@ public class QuickTogglesConfigure extends AppCompatActivity {
 
         private void saveIcons() {
             if (shouldSaveChanges) {
-                SignBoardManager.getInstance(context).saveList(icons.stream().map(i -> i.key).collect(Collectors.toCollection(ArrayList::new)));
+                App.get(context).saveToggleList(icons.stream().map(i -> i.key).collect(Collectors.toCollection(ArrayList::new)));
 
                 updateWidget();
             }

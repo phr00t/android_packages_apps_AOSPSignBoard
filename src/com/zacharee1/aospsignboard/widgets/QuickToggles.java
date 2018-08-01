@@ -7,8 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SignBoardManager;
 import android.widget.RemoteViews;
+import com.zacharee1.aospsignboard.App;
 import com.zacharee1.aospsignboard.R;
-import com.zacharee1.aospsignboard.widgets.qticons.QTIcon;
+import com.zacharee1.aospsignboard.widgets.helpers.QTIcon;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class QuickToggles extends AppWidgetProvider {
 
     public static void update(Context context, String key) {
         Intent update = new Intent(SignBoardManager.ACTION_UPDATE_QUICKTOGGLES);
-        if (key != null) update.putExtra(SignBoardManager.QT_TOGGLE, key);
+        if (key != null) update.putExtra(SignBoardManager.EXTRA_QT_TOGGLE, key);
         update.setComponent(new ComponentName(context, QuickToggles.class));
         context.sendBroadcast(update);
     }
@@ -30,8 +31,8 @@ public class QuickToggles extends AppWidgetProvider {
             AppWidgetManager manager = AppWidgetManager.getInstance(context);
             int[] ids = manager.getAppWidgetIds(new ComponentName(context, QuickToggles.class));
 
-            if (intent.hasExtra(SignBoardManager.QT_TOGGLE)) {
-                String key = intent.getStringExtra(SignBoardManager.QT_TOGGLE);
+            if (intent.hasExtra(SignBoardManager.EXTRA_QT_TOGGLE)) {
+                String key = intent.getStringExtra(SignBoardManager.EXTRA_QT_TOGGLE);
                 QTIcon icon = QTIcon.getInstance(context, key);
                 RemoteViews root = new RemoteViews(context.getPackageName(), R.layout.quicktoggles_root);
                 root.setImageViewResource(icon.getViewId(), icon.getDrawableId());
@@ -46,17 +47,17 @@ public class QuickToggles extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        SignBoardManager.getInstance(context).setQuickToolsEnabled(true);
+        App.get(context).setQuickToolsEnabled(true);
     }
 
     @Override
     public void onDisabled(Context context) {
-        SignBoardManager.getInstance(context).setQuickToolsEnabled(false);
+        App.get(context).setQuickToolsEnabled(false);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        ArrayList<String> split = SignBoardManager.getInstance(context).getList();
+        ArrayList<String> split = App.get(context).getToggleList();
         RemoteViews root = new RemoteViews(context.getPackageName(), R.layout.quicktoggles_root);
         root.removeAllViews(R.id.root);
 

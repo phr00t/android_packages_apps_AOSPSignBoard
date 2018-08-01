@@ -1,4 +1,4 @@
-package com.zacharee1.aospsignboard.widgets.qticons;
+package com.zacharee1.aospsignboard.widgets.helpers;
 
 import android.annotation.DrawableRes;
 import android.annotation.IdRes;
@@ -21,6 +21,7 @@ import android.provider.Settings;
 import android.support.annotation.ColorInt;
 import android.telephony.TelephonyManager;
 import android.util.SparseIntArray;
+import com.zacharee1.aospsignboard.App;
 import com.zacharee1.aospsignboard.R;
 import com.zacharee1.aospsignboard.receivers.ActionReceiver;
 
@@ -132,13 +133,13 @@ public class QTIcon {
                 stateRunner = () -> ((AudioManager) manager).getRingerMode();
                 break;
             case QT_FLASHLIGHT:
-                manager = SignBoardManager.getInstance(context);
+                manager = null;
                 layoutId = R.layout.qt_flashlight;
                 viewId = R.id.flashlight;
                 titleId = R.string.flashlight;
                 drawableIds.put(STATE_DISABLED, R.drawable.flashlight_off);
                 drawableIds.put(STATE_ENABLED, R.drawable.flashlight_on);
-                stateRunner = () -> ((SignBoardManager) manager).isFlashlightEnabled() ? STATE_ENABLED : STATE_DISABLED;
+                stateRunner = () -> App.get(context).isFlashlightEnabled() ? STATE_ENABLED : STATE_DISABLED;
                 break;
             case QT_ROTATION:
                 manager = null;
@@ -193,7 +194,7 @@ public class QTIcon {
         switch (key) {
             default:
                 intent = new Intent(SignBoardManager.ACTION_TOGGLE_QUICKTOGGLE);
-                intent.putExtra(SignBoardManager.QT_TOGGLE, key);
+                intent.putExtra(SignBoardManager.EXTRA_QT_TOGGLE, key);
                 intent.setComponent(new ComponentName(context, ActionReceiver.class));
                 pendingIntent = PendingIntent.getBroadcast(context, key.hashCode(), intent, 0);
                 break;
